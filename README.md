@@ -1,4 +1,4 @@
-# ASM Tool - Attack Surface Management Scanner
+# Project Xenon - Attack Surface Management Scanner
 
 A comprehensive, automated Attack Surface Management tool that performs subdomain discovery, DNS reconnaissance, port scanning, and HTTP probing. Built with Docker for easy deployment and uses industry-standard security tools.
 
