@@ -1,0 +1,14 @@
+Tool,Purpose,URL,License,Notes
+subfinder,Passive subdomain discovery,https://github.com/projectdiscovery/subfinder,MIT,Fast passive enumeration; good first stage
+assetfinder,Find related domains/subdomains,https://github.com/tomnomnom/assetfinder,MIT,Augments passive lists
+amass,Comprehensive OSINT & active enumeration,https://github.com/owasp-amass/amass,Apache-2.0,Featureful; passive+active, graphing
+httpx,HTTP/TLS probing & fingerprinting,https://github.com/projectdiscovery/httpx,MIT,Fast L7 probing, extract headers/status
+dnspython,DNS resolution & DNS utilities (Python),https://github.com/rthalley/dnspython,ISC,Programmatic resolver for Python
+pyasn,IP -> ASN lookups (offline DB),https://github.com/hadiasghari/pyasn,MIT,Fast ASN inference for hosting detection
+ipwhois,RDAP/WHOIS parsing & ownership enrichment,https://github.com/secynic/ipwhois,MIT/BSD-like,Use for registration & org enrichment
+zmap,Very fast TCP port scanning (internet-scale),https://github.com/zmap/zmap,Apache-2.0,Use for bulk top-100 port sweep
+zgrab2,Application-layer banner grabbing & TLS fetches,https://github.com/zmap/zgrab2,Apache-2.0 / ISC,Follow-up grabs after zmap
+certigo,Certificate parsing & inspection,https://github.com/square/certigo,Apache-2.0,Parse chains, extract SANs & fingerprints
+requests,HTTP client library (Python),https://pypi.org/project/requests/,Apache-2.0,General HTTP client if not using httpx
+cryptography,TLS parsing & crypto helpers,https://github.com/pyca/cryptography,Apache-2.0 / BSD-like,For custom cert parsing/encryption tasks
+nuclei,Template-driven vuln detection,https://github.com/projectdiscovery/nuclei,MIT,Run targeted checks; many templates available

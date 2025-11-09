@@ -1,0 +1,63 @@
+ASM Tool - Complete File Tree
+==============================
+
+ASM/
+├── .dockerignore                  # Docker build ignore patterns
+├── .env.example                   # Template for environment variables
+├── .gitignore                     # Git ignore patterns
+│
+├── asm_scanner.py                 # Main Python orchestration script (500+ lines)
+├── Dockerfile                     # Kali Linux based container definition
+├── docker-compose.yml             # Docker Compose configuration
+├── requirements.txt               # Python dependencies
+│
+├── run.sh                         # Quick run script for Linux/Mac
+├── run.bat                        # Quick run script for Windows
+├── Makefile                       # Build automation (Linux/Mac)
+│
+├── README.md                      # Complete documentation
+├── QUICKSTART.md                  # Fast setup guide
+├── PROJECT_STRUCTURE.md           # Architecture and design overview
+├── SETUP_COMPLETE.md              # Setup completion summary (this file)
+├── TREE.txt                       # This file tree
+│
+├── config/                        # Configuration directory
+│   └── README.md                  # Configuration documentation
+│
+├── results/                       # Created at runtime
+│   └── [domain]/                  # Per-domain results
+│       └── [timestamp]/           # Timestamped scan results
+│           ├── 00_summary.json
+│           ├── 01_subfinder.txt
+│           ├── 02_alterx.txt
+│           ├── 03_massdns_resolved.txt
+│           ├── 04_dnsx_recon.json
+│           ├── 05_nmap_scan.xml
+│           ├── 05_nmap_scan.txt
+│           ├── 06_httpx_probe.json
+│           ├── live_urls.txt
+│           └── screenshots/
+│               └── *.png
+│
+└── tools.csv                      # Original tool reference
+
+Files Created: 15
+Directories: 2
+
+Key Files:
+----------
+✓ asm_scanner.py       - Main workflow orchestrator
+✓ Dockerfile           - Container with all security tools
+✓ docker-compose.yml   - Easy deployment configuration
+✓ README.md            - Complete documentation (6000+ words)
+✓ QUICKSTART.md        - Get started in 3 steps
+
+Quick Commands:
+--------------
+Build:   docker-compose build
+Run:     docker-compose run --rm asm-scanner -d example.com
+Shell:   docker-compose run --rm --entrypoint /bin/bash asm-scanner
+
+Windows: .\run.bat -d example.com
+Linux:   ./run.sh -d example.com
+Make:    make run DOMAIN=example.com

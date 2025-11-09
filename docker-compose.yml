@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  asm-scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: asm-tool
+    image: asm-scanner:latest
+    volumes:
+      # Mount results directory to host
+      - ./results:/asm/results
+      # Optional: Mount config files if needed
+      - ./config:/asm/config:ro
+    # Privileged mode needed for raw socket operations (nmap SYN scan)
+    privileged: true
+    # Network mode for better scanning capabilities
+    network_mode: host
+    # Environment variables (optional)
+    environment:
+      - CHAOS_API_KEY=${CHAOS_API_KEY:-}
+      - SHODAN_API_KEY=${SHODAN_API_KEY:-}
+    # Example command - override with your target domain
+    # command: ["-d", "example.com", "-t", "20"]
+    stdin_open: true
+    tty: true
