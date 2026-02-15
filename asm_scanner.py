@@ -244,25 +244,94 @@ class ASMScanner:
         return http_info
     
     def get_ssl_cert_info(self, subdomain: str, ip: str) -> Optional[Dict]:
-        """Get SSL certificate information"""
+        """Get SSL certificate information using openssl command"""
         try:
-            context = ssl.create_default_context()
-            context.check_hostname = False
-            context.verify_mode = ssl.CERT_NONE
+            # Use openssl command to get cert info
+            cmd = [
+                "openssl", "s_client",
+                "-connect", f"{ip}:443",
+                "-servername", subdomain,
+                "-showcerts"
+            ]
             
-            with socket.create_connection((ip, 443), timeout=10) as sock:
-                with context.wrap_socket(sock, server_hostname=subdomain) as ssock:
-                    cert = ssock.getpeercert()
+            # Send empty input to close connection after getting cert
+            result = subprocess.run(
+                cmd,
+                input="",
+                capture_output=True,
+                text=True,
+                timeout=10
+            )
+            
+            if result.returncode != 0 and not result.stdout:
+                return None
+            
+            # Parse the output to extract cert info
+            output = result.stdout
+            
+            cert_info = {}
+            
+            # Extract subject
+            for line in output.split('\n'):
+                if 'subject=' in line.lower() or 's:' in line:
+                    cert_info['subject'] = line.split('=', 1)[1].strip() if '=' in line else line.strip()
+                elif 'issuer=' in line.lower() or 'i:' in line:
+                    cert_info['issuer'] = line.split('=', 1)[1].strip() if '=' in line else line.strip()
+            
+            # Get detailed cert info using openssl x509
+            # Extract the certificate from the output
+            cert_start = output.find('-----BEGIN CERTIFICATE-----')
+            cert_end = output.find('-----END CERTIFICATE-----', cert_start)
+            
+            if cert_start != -1 and cert_end != -1:
+                cert_pem = output[cert_start:cert_end + len('-----END CERTIFICATE-----')]
+                
+                # Parse cert with openssl x509
+                x509_cmd = ["openssl", "x509", "-noout", "-text"]
+                x509_result = subprocess.run(
+                    x509_cmd,
+                    input=cert_pem,
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                
+                if x509_result.returncode == 0:
+                    x509_output = x509_result.stdout
                     
-                    return {
-                        'subject': dict(x[0] for x in cert.get('subject', ())),
-                        'issuer': dict(x[0] for x in cert.get('issuer', ())),
-                        'version': cert.get('version'),
-                        'serial_number': cert.get('serialNumber'),
-                        'not_before': cert.get('notBefore'),
-                        'not_after': cert.get('notAfter'),
-                        'san': [x[1] for x in cert.get('subjectAltName', ())]
-                    }
+                    # Extract dates
+                    for line in x509_output.split('\n'):
+                        line = line.strip()
+                        if 'Not Before' in line:
+                            cert_info['not_before'] = line.split(':', 1)[1].strip()
+                        elif 'Not After' in line:
+                            cert_info['not_after'] = line.split(':', 1)[1].strip()
+                        elif 'Serial Number' in line:
+                            # Get the serial number from next line
+                            idx = x509_output.find(line)
+                            next_line_start = x509_output.find('\n', idx) + 1
+                            next_line_end = x509_output.find('\n', next_line_start)
+                            if next_line_start > 0:
+                                cert_info['serial_number'] = x509_output[next_line_start:next_line_end].strip()
+                    
+                    # Extract SANs
+                    san_start = x509_output.find('Subject Alternative Name:')
+                    if san_start != -1:
+                        san_line_start = x509_output.find('\n', san_start) + 1
+                        san_line_end = x509_output.find('\n', san_line_start)
+                        san_line = x509_output[san_line_start:san_line_end].strip()
+                        
+                        sans = []
+                        for item in san_line.split(','):
+                            if ':' in item:
+                                sans.append(item.split(':', 1)[1].strip())
+                        cert_info['san'] = sans
+            
+            return cert_info if cert_info else None
+            
+        except subprocess.TimeoutExpired:
+            logger.debug(f"SSL cert retrieval timeout for {subdomain}")
+            return None
         except Exception as e:
             logger.debug(f"SSL cert retrieval failed for {subdomain}: {str(e)}")
             return None

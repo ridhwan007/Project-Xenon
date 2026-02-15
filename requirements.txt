@@ -1,2 +1,4 @@
 # Python dependencies for ASM Scanner
 # Core dependencies for the orchestration script
+dnspython>=2.3.0
+requests>=2.31.0

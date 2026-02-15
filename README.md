@@ -2,6 +2,10 @@
 
 A comprehensive, automated Attack Surface Management tool that performs subdomain discovery, DNS reconnaissance, port scanning, and HTTP probing. Built with Docker for easy deployment and uses industry-standard security tools.
 
+**Includes:**
+- **ASM Scanner** (`asm_scanner.py`) - Main subdomain scanning tool
+- **Acquisition Finder** (`acquisition_finder.py`) - M&A discovery tool for finding acquired companies and domains
+
 ## Features
 
 - **Live Subdomains Only**: Focuses on actually resolved, live subdomains (no dead/invalid domains)

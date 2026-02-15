@@ -6,9 +6,45 @@ httpx,HTTP/TLS probing & fingerprinting,https://github.com/projectdiscovery/http
 dnspython,DNS resolution & DNS utilities (Python),https://github.com/rthalley/dnspython,ISC,Programmatic resolver for Python
 pyasn,IP -> ASN lookups (offline DB),https://github.com/hadiasghari/pyasn,MIT,Fast ASN inference for hosting detection
 ipwhois,RDAP/WHOIS parsing & ownership enrichment,https://github.com/secynic/ipwhois,MIT/BSD-like,Use for registration & org enrichment
-zmap,Very fast TCP port scanning (internet-scale),https://github.com/zmap/zmap,Apache-2.0,Use for bulk top-100 port sweep
-zgrab2,Application-layer banner grabbing & TLS fetches,https://github.com/zmap/zgrab2,Apache-2.0 / ISC,Follow-up grabs after zmap
-certigo,Certificate parsing & inspection,https://github.com/square/certigo,Apache-2.0,Parse chains, extract SANs & fingerprints
-requests,HTTP client library (Python),https://pypi.org/project/requests/,Apache-2.0,General HTTP client if not using httpx
 cryptography,TLS parsing & crypto helpers,https://github.com/pyca/cryptography,Apache-2.0 / BSD-like,For custom cert parsing/encryption tasks
 nuclei,Template-driven vuln detection,https://github.com/projectdiscovery/nuclei,MIT,Run targeted checks; many templates available
+
+api:
+shodan
+fofa - implement to remove non resolved URL, - only for live URLs
+
+
+
+port scans - web ports - save in XML format - OX
+
+
+
+httpx flow:
+
+1. subdomain discover - subfinder, Alterx integrate with massdns to resolve the valid subdomains - this on (chaos api - project discovery)
+2. after subdomains are collected, run dnsx (projectdiscovery tool) (use -recon) save in json format
+3. from dnsx subdomains which are resolved run nmap with sensitive and web applications ports - sV (version as well)
+4 for the extracted ports - run httpx - falgs to give  -server, -td, -title, -sc, -cl store this in json (nice to have screenshot - eyewitness / go witness)
+
+
+Historic subdomains
+5. gau --subs google.com for historic url, again dnsx - extract subdomains and run dnsx to see if any of the subdomains are resolvable, remove non-resolvable from the output, for the resolved subdomains, run httpx again using -fc 404 
+5. URO, gf
+
+
+Mergers & acquisition: 
+Crunchbase, hooksy, whoisxml
+
+Hi I am creating an ASM tool, 
+The workflow is like the below:
+
+1. subdomain discover - subfinder, Alterx integrate with massdns to resolve the valid subdomains - this on (chaos api - project discovery)
+2. after subdomains are collected, run dnsx (projectdiscovery tool) (use -recon) save in json format
+3. from dnsx subdomains which are resolved run nmap with sensitive and web applications ports - sV (version as well)
+4 for the extracted ports - run httpx - falgs to give  -server, -td, -title, -sc, -cl store this in json (nice to have screenshot - eyewitness / go witness)
+5.
+
+So It should run in a docker container - create a kali image, install the dependency needed, run the workflow, the tool should take a domain name as input to do the following tasks
+
+
+First create the script to run the tools in python, it should be faster as well
